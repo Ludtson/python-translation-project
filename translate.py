@@ -93,12 +93,18 @@ def get_complement(sequence):
 
     Examples
     --------
-    >>> get_reverse('AUGC')
+    >>> get_complement('AUGC')
     'UACG'
-    >>> get_reverse('ATGC')
+    >>> get_complement('ATGC')
     'TACG'
     """
-    pass
+    for base in sequence:
+        if base not in 'AUCGaucg':
+            print("Error: NOT RNA sequence")
+            return None
+    seq1 = 'AUCGUAGCaucguagc'
+    seq_dict = { seq1[i]:seq1[i+4] for i in range(16) if i < 4 or 8<=i<12 }
+    return "".join([seq_dict[base] for base in sequence]).upper()
 
 def reverse_and_complement(sequence):
     """Get the reversed and complemented form of a `sequence` of nucleotides.
