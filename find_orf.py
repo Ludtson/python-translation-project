@@ -57,16 +57,17 @@ def vet_nucleotide_sequence(sequence):
     # any valid RNA and DNA sequence strings, respectively (and only strings of
     # RNA and DNA bases).
     # Read the docstring above for additional clues.
-    rna_pattern_str = r'AUCG'
-    dna_pattern_str = r'ATCG'
+    rna_pattern_str = r'^[AUCG]*$'
+    dna_pattern_str = r'^[ATCG]*$'
+#              rna can also be r'^[AUCGaucg]*$' and dna r'^[ATCG]*$' and without the edit i made to the match below
     ##########################################################################
 
     rna_pattern = re.compile(rna_pattern_str)
     dna_pattern = re.compile(dna_pattern_str)
 
-    if rna_pattern.match(sequence):
+    if rna_pattern.match(sequence.upper()):
         return
-    if dna_pattern.match(sequence):
+    if dna_pattern.match(sequence.upper()):
         return
     else:
         raise Exception("Invalid sequence: {0!r}".format(sequence))
@@ -119,12 +120,13 @@ def vet_codon(codon):
     # Change `codon_pattern_str` so that it will match any valid codons, and
     # only valid codons.
     # Read the docstring above for additional clues.
-    codon_pattern_str = r'AUG'
+    codon_pattern_str = r'^[AUGC]{3}$'
+#                   r'^[AUCGaucg]{3}$' without editing code below
     ##########################################################################
 
     codon_pattern = re.compile(codon_pattern_str)
 
-    if codon_pattern.match(codon):
+    if codon_pattern.match(codon.upper()):
         return
     else:
         raise Exception("Invalid codon: {0!r}".format(codon))
@@ -207,7 +209,22 @@ def find_first_orf(sequence,
     # exactly. Change `orf_pattern_str` so that it will match any open reading
     # frame.
     # Read the docstring above for additional clues.
-    orf_pattern_str = r'AUGGUAUAA'
+#   here's my original regex
+#   r'((AAA)|(AUG))+([AUGC]{3})*((UAA)|(UAG)|(UGA)|(UUU))' #I was adding all sort of codons for start and stop as I encoutered errors while testing, but there was one that wont go away
+#                       AUG([AUGC]{3})*((UAA)|(UAG)|(UGA))$ this is the basic of the code
+    ###however, this code is written in a way that the strt & stp codons are dynamic, it's a bit wierd to hardcode so I keep getting one last error
+    #so, I am creating variables as "strings" to take in start_codons & stop_codons "lists" so i can use them in the "regex"
+    strt = '|'.join(start_codons) #takes the start codon provided and saves it as a string named 'strt'
+    stp = '|'.join(stop_codons) #takes the stop codon provided and takes it as a string named 'stp'
+    #here is my edited `regex`
+    orf_pattern_str = r'(' + strt +r')([AUCG]{3})*('+ stp +r')'
+    #breakdown
+    #the regex is in 3 groups
+    #first group is the start codon
+    #   literarily it is 'AUG';
+    #   but the test script is dynamic, and (' + strt +r') fixed it
+    #the second group is ([AUGC]{3})* which follows the start codon
+    #the last group is ((UAA)|(UAG)|(UGA)) dynamically captured as ('+ stp +r') in case of unexpecteds
     ##########################################################################
 
     # Create the regular expression object
