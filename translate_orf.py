@@ -313,13 +313,13 @@ def main():
             action = 'store_true',
             help = ('The sequence argument should be treated as a path to a '
                     'containing the sequence to be searched.'))
-    #arg2: start codon
+    #arg3: start codon
     parser.add_argument('-s', '--start-codons',
             type = str,
             nargs = '+', # one or more arguments
             default = ['AUG'],
             help = ('One or more possible start codons.'))
-    #arg3: stop codon
+    #arg4: stop codon
     parser.add_argument('-x', '--stop-codons',
             type = str,
             nargs = '+', # one or more arguments
