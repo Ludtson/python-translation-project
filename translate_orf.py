@@ -262,21 +262,22 @@ def translate_sequence(sequence, genetic_code = {'GUC': 'V', 'ACC': 'T', 'GUA': 
         A dictionary mapping all 64 codons (strings of three RNA bases) to
         amino acids (string of single-letter amino acid abbreviation). Stop
         codons should be represented with asterisks ('*').
+
     Returns
     -------
     str
         A string of the translated amino acids.
     """
     #find first orf
-    first_orf_seq = find_first_orf(sequence)
+    #first_orf_seq = find_first_orf(sequence)
 
-    # ensure copies of first_orf is uppercase
-    first_orf_sequence = first_orf_seq.upper()
+    # ensure sequence is uppercase
+    seq = sequence.upper()
 
-    #translate the first orf sequence
+    #translate the sequence
     protein = ""
-    for i in range(0, len(first_orf_sequence) - (len(first_orf_sequence) % 3), 3):
-        codon = first_orf_sequence[i:i + 3]
+    for i in range(0, len(seq) - (len(seq) % 3), 3):
+        codon = seq[i:i + 3]
         if genetic_code[codon] == "*":
             break
         protein += genetic_code[codon]
